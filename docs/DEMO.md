@@ -34,11 +34,11 @@ In this lab you will deploy an application on Universal Control Plane (UCP) that
 
 ## Document conventions
 
-When you encounter a phrase in between `<` and `>`  you are meant to substitute in a different value. 
+When you encounter a phrase in between `<` and `>`  you are meant to substitute in a different value.
 
 For instance if you see `ssh <username>@<hostname>` you would actually type something like `ssh labuser@v111node0-adaflds023asdf-23423kjl.appnet.com`
 
-You will be asked to SSH into various nodes. These nodes are referred to as **v111node0**, **v111node1** etc. These tags correspond to the very beginning of the hostnames you will find in your welcome email. 
+You will be asked to SSH into various nodes. These nodes are referred to as **v111node0**, **v111node1** etc. These tags correspond to the very beginning of the hostnames you will find in your welcome email.
 
 ## <a name="prerequisites"></a>Prerequisites
 
@@ -82,7 +82,7 @@ Server:
  Built:        Wed Mar  1 01:20:54 2017
  OS/Arch:      linux/amd64
  Experimental: false
- 
+
 ```
 
 3. Run the UCP installer to install the UCP Controller node.
@@ -108,13 +108,13 @@ It will take up to 30 seconds to install.
 
 Depending on what browser you are using, you will receive a warning about the connection. Proceed through to the UCP URL. The warning is occuring because we UCP uses privately signed certificates by default. In a production installation we would add our own certificates that would be trusted by our browser.
 
-![](images/private.png) 
+![](images/private.png)
 
 Log in as the user `admin` with the password that you supplied in step 3.
 
-![](images/ucp-login.png) 
+![](images/ucp-login.png)
 
-You now have a UCP cluster with a single node. Next you are going to add two nodes to the cluster. These nodes are known as Worker nodes and are the nodes that host application containers. 
+You now have a UCP cluster with a single node. Next you are going to add two nodes to the cluster. These nodes are known as Worker nodes and are the nodes that host application containers.
 
 ### <a name="Task 1.2"></a>Task 1.2: Joining UCP Worker Nodes
 
@@ -128,7 +128,7 @@ docker swarm join --token SWMTKN-1-5mql67at3mftfxdhoelmufv0f50id358xyyeps4gk9odg
 ```
 
 This is a Swarm join token. It is a secret token used by nodes so that they can securely join the rest of the UCP cluster.
- 
+
 2. Log in to one of your remaining nodes. On the command line run the Swarm join token command you copied from UCP. You will get a status message indicating that this node has joined the cluster.
 
 ```
@@ -187,7 +187,7 @@ services:
 
 1. Log in to your UCP GUI and go to Resources / Stacks & Applications / Deploy. Paste the above compose file text into the box under Application Definition. In the Application Name box write `pets`. Click the Create button.
 
-![](images/deploy.png) 
+![](images/deploy.png)
 
 You should see a success message:
 
@@ -196,29 +196,29 @@ Creating network pets_default
 Creating service pets_web
 ```
 
-Your `pets` application stack is now deployed and live! It's running as a single stateless container and serving up a web page. 
+Your `pets` application stack is now deployed and live! It's running as a single stateless container and serving up a web page.
 
 2. Go to Resources and click on the stack that you just deployed. You will see that we deployed a service called `pets_web` and a network called `pets_default`. Click on the `pets_web` service and you will see all of the configured options for this service. Some of these are taken from our compose file and some are default options.
 
-![](images/stack.png) 
+![](images/stack.png)
 
 3. Go to Resources / Networks and you will see that a new overlay network called `pets_default` now exists.
 
 4. On the bottom of the `pets_web` page, UCP will show what ports it is exposing the application on. In your browser go to the public IP of one of your worker nodes and the port that is listed `<public-ip>:<published-port>`.
 
-![](images/published-port.png) 
+![](images/published-port.png)
 
 In your browser you should now see the deployed Docker Pets app. It serves up an image of different pets. Click on "Serve Another Pet" and it will reload the picture.
 
-![](images/single-container-deploy.png) 
+![](images/single-container-deploy.png)
 
 ### <a name="task2.2"></a>Task 2.2: Scaling Services
 
 So far we have deployed a service as a single container. Our application will need some level of redundancy in case there is a crash or node failure, so we are going to scale the `web` service so that it's made of multiple containers running on different hosts.
 
-1. Go to Resources / Services / `pets_web`/ Scheduling. Edit the Scale parameter and change it from `1` to `3`. Click the checkmark and then Save Changes. After a few moments on the Services page we can see that the Status will change to `3/3` as the new container is scheduled and deployed in the cluster. Click on `pets_web` / Tasks. It shows the nodes where our `web` containers were deployed on. 
+1. Go to Resources / Services / `pets_web`/ Scheduling. Edit the Scale parameter and change it from `1` to `3`. Click the checkmark and then Save Changes. After a few moments on the Services page we can see that the Status will change to `3/3` as the new container is scheduled and deployed in the cluster. Click on `pets_web` / Tasks. It shows the nodes where our `web` containers were deployed on.
 
-![](images/tasks.png) 
+![](images/tasks.png)
 
 2. Now go back to the application `<public-ip>:<published-port>` in your browser. Click Server Another Pet a few times to see the page get reloaded. You should see the Container ID changing between three different values. UCP is automatically load balancing your requests between the three containers in the `pets_web` service.
 
@@ -241,7 +241,7 @@ services:
             interval: 10s
             timeout: 2s
             retries: 3   
-            
+
     visualizer:
         image: manomarks/visualizer
         ports:
@@ -253,14 +253,14 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-- `replicas: 3` defines how many identical copies of a service container we want UCP to schedule. 
-- `visualizer:` is a second service we are going deploy as a part of this stack. 
+- `replicas: 3` defines how many identical copies of a service container we want UCP to schedule.
+- `visualizer:` is a second service we are going deploy as a part of this stack.
 - `constraints: [node.role == manager]` is a scheduling requirement we are applying so that the `visualizer` is only scheduled on the manager node.
 - `- /var/run/docker.sock:/var/run/docker.sock` is a host-mounted volume we are mounting inside our container. This volume is being used so that the `visualizer` can communicate directly with the local docker engine.
 
-1. Go to Resources / Stacks & Applications / Deploy. Paste the above compose file text into the box under Application Definition with the title `pets`. 
+1. Go to Resources / Stacks & Applications / Deploy. Paste the above compose file text into the box under Application Definition with the title `pets`.
 
-![](images/deploy2.png) 
+![](images/deploy2.png)
 
 You should see the following output:
 
@@ -273,7 +273,7 @@ The `pets_visualizer` service is created and our existing `pets_web` service is 
 
 2. Go to the `<external-ip>:<port>` that is listed on the page of the 	`pets_visualizer` service in your browser window. This shows you the nodes of your UCP cluster and where containers are scheduled. You should see that the `pets_web` container is evenly distributed across your nodes.
 
-![](images/visualizer.png) 
+![](images/visualizer.png)
 
 
 ### <a name="task2.4"></a>Task 2.4: Self-Healing Applications with UCP
@@ -292,7 +292,7 @@ This will turn off the Docker engine and bring down all of the containers on thi
 
 3. Now watch the visualizer app in your browser. You will see one of the nodes go red, indicating that UCP has detected a node failure. Any containers on this node will now get rescheduled on to other nodes. Since we defined it in our compose file with `replicas: 3`, UCP will ensure that we always have `3` copies of the `web` container running in our cluster.
 
-![](images/node-kill.png) 
+![](images/node-kill.png)
 
 4. Now return `ucp-worker-1` to a healthy state by turning the Docker engine on again.
 
@@ -303,7 +303,7 @@ docker start/running, process 22882
 
 5. Finally, decommission this `pets` stack in the UCP GUI by clicking on `pets` / Actions / Remove Stack. Confirm the removal. You have just removed all of the containers and also the networks that were created when the stack was first deployed.
 
-![](images/removal.png) 
+![](images/removal.png)
 
 
 ## <a name="task3"></a>Task 3: Deploying a Complex Multi-Service Application
@@ -313,9 +313,9 @@ In this task we are going to add another service to the stack. Up to this point 
 The resulting application will have 3 `web` frontend containers and 3 `db` consul containers. A backend network will be deployed for secure communication between `web` and `db`. The app is exposing HTTP endpoints for different services on ports `5000` and `7000`. UCP will publish these ports on each node in the UCP cluster. Application traffic to any of the external ports will get load balanced to healthy containers.
 
 
-![](images/pets-dev-arch.png) 
+![](images/pets-dev-arch.png)
 
-### <a name="task3.1"></a>Task 3.1: Deploying a Stateful Service 
+### <a name="task3.1"></a>Task 3.1: Deploying a Stateful Service
 
 In this step we will deploy a new compose file that adds functionality on top of the previous compose files.
 
@@ -337,20 +337,20 @@ services:
             DB: 'db'
         networks:
         	  - backend
-            
+
     db:
         image: consul:0.7.2
         command: agent -server -ui -client=0.0.0.0 -bootstrap-expect=3 -retry-join=db -retry-join=db -retry-join=db -retry-interval 5s
         deploy:
             replicas: 3
         ports:
-            - 8500 
+            - 8500
         environment:
             CONSUL_BIND_INTERFACE: 'eth2'
             CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
-        networks: 
+        networks:
             - backend
-            
+
     visualizer:
         image: manomarks/visualizer
         ports:
@@ -360,7 +360,7 @@ services:
                 constraints: [node.role == manager]
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-    
+
 networks:
 	 backend:
 ```
@@ -371,34 +371,34 @@ networks:
 - `command:` is passing a specific command line argument to the consul image.
 - `networks: backend:` defines an overlay network that both `web` and `db` will connect to to communicate.
 
-1. Deploy the `pets` stack again with the above compose file. 
+1. Deploy the `pets` stack again with the above compose file.
 
 2. Once all the service tasks are up go to the `web` service externally published `<ip>:<port>` that maps to the internal port `5000`. The Docker Pets app is written to take advantage of the stateful backend. Now it gives you the capability to cast a vote for your favorite pet. The vote will be stored by the `db` service along with the number of visits to the application.
 
 3. Submit your name and vote to the app.
 
-![](images/voting.png) 
+![](images/voting.png)
 
-After you cast your vote you will get redirected back to the pets landing page. 
+After you cast your vote you will get redirected back to the pets landing page.
 
 4. Refresh the page a few times with Server Another Pet. You will see the page views climb while you get served across all three `web` containers.
 
 5. Now go to the `web` service externally published `<ip>:<port>` that maps to the internal port `7000`. This page totals the number of votes that are held in the `db` backend.
 
-![](images/results.png) 
+![](images/results.png)
 
 6. If you go to the `visualizer` service in your browser you will now see that a redundant Consul KV store is deployed on the Swarm. It's storing the votes for the application.
 
 ### <a name="task3.2"></a>Task 3.2: Configuring Application Secrets
 
-Secrets are any data that an application uses that is sensitive in nature. Secrets can be PKI certificates, passwords, or even config files. UCP handles secrets as a special class of data. Docker secrets are encrypted them at rest, sent to containers through TLS, and are mounted inside containers in a memory-only file that is never stored on disk. 
+Secrets are any data that an application uses that is sensitive in nature. Secrets can be PKI certificates, passwords, or even config files. UCP handles secrets as a special class of data. Docker secrets are encrypted them at rest, sent to containers through TLS, and are mounted inside containers in a memory-only file that is never stored on disk.
 
-Before we can configure our compose file to use a secret, we have to create the secret so it can be stored in the encrypted UCP key-value store. 
+Before we can configure our compose file to use a secret, we have to create the secret so it can be stored in the encrypted UCP key-value store.
 
 1. In the UCP GUI go to Resources / Secrets / +Create Secret. Name your secret `admin_password`. Enter the secret password of your choice and click Create.
 
 
-![](images/secret-create.png) 
+![](images/secret-create.png)
 
 This secret will now be stored encrypted in the UCP data store. When applications request access to it, the secret will be sent encrypted to the container and mounted in a memory-only file on the host.
 
@@ -425,21 +425,21 @@ services:
         	  - backend
         secrets:
             - admin_password
-            
+
     db:
         image: consul:0.7.2
         command: agent -server -ui -client=0.0.0.0 -bootstrap-expect=3 -retry-join=db -retry-join=db -retry-join=db -retry-interval 5s
         deploy:
             replicas: 3
         ports:
-            - 8500 
+            - 8500
         environment:
             CONSUL_BIND_INTERFACE: 'eth2'
             CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
-        networks: 
+        networks:
             - backend
 
-            
+
     visualizer:
         image: manomarks/visualizer
         ports:
@@ -449,7 +449,7 @@ services:
                 constraints: [node.role == manager]
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-    
+
 networks:
 	 backend:
 
@@ -476,7 +476,7 @@ The Docker Pets application is built with a `/health` endpoint to advertise it's
 
 You should receive an `OK` message indicating that this particular container is healthy.
 
-2. Now use your browser and go to the `<ip>:<port>/kill` URL. This will toggle the health to unhealthy for one of the `web` containers. 
+2. Now use your browser and go to the `<ip>:<port>/kill` URL. This will toggle the health to unhealthy for one of the `web` containers.
 
 You should receive a message similar to:
 ```
@@ -491,7 +491,7 @@ You have toggled web instance 87660acc389c to unhealthy
 
 A rolling update is a deployment method to slowly and incrementally update a series of containers with a new version in a way that does not cause downtime for the entire application. One by one, UCP will update containers and check the application health for any issues. If the deployment begins to fail in any way, a rollback can be applied to return the app to the last known working configuration.
 
-In the following steps we will update the `pets_web` service with a new image version. We will use a purposely broken image to simulate a bad deployment. 
+In the following steps we will update the `pets_web` service with a new image version. We will use a purposely broken image to simulate a bad deployment.
 
 1. Click on the `pets_web` service. On the Details page change the image to  `chrch/docker-pets:broken`. Make sure to click the green check so that the change is captured.
 
@@ -516,7 +516,7 @@ These values mean that during a rolling update, containers will be updated `1` c
 ![](images/pause.png)
 
 6. In the Details page of `pets_web` click Actions / Rollback. This will automatically rollback the `pets_web` service to the last working image.
- 
+
 ![](images/rollback.png)
 
 7. Repeat step 1 but this time use the image `chrch/docker-pets:2.0`.
@@ -527,4 +527,3 @@ These values mean that during a rolling update, containers will be updated `1` c
 
 
 ### Congratulations, you have completed the lab!!
-
