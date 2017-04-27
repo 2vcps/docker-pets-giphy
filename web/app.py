@@ -15,9 +15,9 @@ threaded = os.getenv('THREADED', False)
 
 
 
-option_a_images = os.listdir('./static/option_a')
-option_b_images = os.listdir('./static/option_b')
-option_c_images = os.listdir('./static/option_c')
+#option_a_images = os.listdir('./static/option_a')
+#option_b_images = os.listdir('./static/option_b')
+#option_c_images = os.listdir('./static/option_c')
 
 
 healthy = True

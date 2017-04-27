@@ -75,6 +75,11 @@ The `web` container has several configuration parameters as environment variable
 - **`OPTION_B`**: Defaults to 'Dogs'. Giphy search for 'dogs' return random
 - **`OPTION_C`**: Defaults to 'Whales'. Giphy search for 'whales' return random
 
+##Python wrapper for api.giphy.com
+https://github.com/shaunduncan/giphypop
+
+This worked
+
 
 
 

@@ -3,7 +3,7 @@ services:
     web:
         #Use following image to download from Docker Hub
         #image with giphypop
-        image: jowings/petsdev:v3
+        image: jowings/docker-pets-giphy:latest
         deploy:
             mode: replicated
             replicas: 2
@@ -17,6 +17,7 @@ services:
         environment:
             DB: 'db'
             THREADED: 'True'
+            DEBUG: 'True'
         networks:
             - backend
         volumes:
