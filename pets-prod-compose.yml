@@ -3,7 +3,7 @@ services:
     web:
         #Use following image to download from Docker Hub
         #Image with giphypop
-        image: jowings/petsdev:latest
+        image: jowings/docker-pets-giphy:latest
         deploy:
             mode: replicated
             replicas: 2
