@@ -1,11 +1,10 @@
 # Docker Pets with Giphy
-> written for `chrch/docker-pets:1.1`
+> written for `jowings/docker-pets:0.1`
 
-Docker Pets is a simple application that's useful for testing out features of Docker Datacenter.
+original demo found at https://github.com/mark-church/docker-pets/
 
-If you are interested in a guide on how to demo Docker Pets on the Universal Control Plane then check out [this tutorial](https://github.com/mark-church/docker-pets/blob/master/DEMO-DDC.md).
 
-If you are interested in contributing to Docker pets please check out the [Release Notes & Roadmap.](https://github.com/mark-church/docker-pets/blob/master/ROADMAP.md).
+This is a fork to practice changing app.py (the python code) and roll the changes to the docker stack with Swarm
 
 Docker-Pets-Giphy is comprised of two images:
 
@@ -37,14 +36,14 @@ This is the full architecture that is deployed when using [pets-dev-compose.yml]
 ```
 $ git clone https://github.com/2vcps/docker-pets-giphy
 
-~/docker-pets$ docker -v
-Docker version 1.13.1-rc1, build 2527cfc
+~/docker-pets$  docker -v
+Docker version 17.03.1-ce, build c6d412e
 
-~/docker-pets$ docker node ls
+docker-pets-giphy jowings$ docker node ls
 ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
-fd3ovikiq7tzmdr70zukbsgbs *  moby      Ready   Active        Leader
+b0bz8qaotyuajv0d9pjzq38a4 *  moby      Ready   Active        Leader
 
-~/docker-pets$ docker stack deploy -c pets-dev-compose.yml pets
+~/docker-pets-giphy$ docker stack deploy -c pets-dev-compose.yml pets
 ```
 
 ![](docs/images/pets-dev-arch.png)
@@ -72,20 +71,16 @@ The `web` container has several configuration parameters as environment variable
 
 ## Voting Option Configuration
 
-- **`OPTION_A`**: Defaults to 'Cats'. Pictures located in `/docker-petspets/web/static/option_a`
-- **`OPTION_B`**: Defaults to 'Dogs'. Pictures located in `/docker-pets/web/static/option_b`
-- **`OPTION_C`**: Defaults to 'Whales'. Pictures located in `/docker-pets/web/static/option_c`
+- **`OPTION_A`**: Defaults to 'Cats'. Giphy search for 'cats' return random
+- **`OPTION_B`**: Defaults to 'Dogs'. Giphy search for 'dogs' return random
+- **`OPTION_C`**: Defaults to 'Whales'. Giphy search for 'whales' return random
 
 
 
 
 
-## Running Ppetsets on Docker UCP in Production
-This [full length tutorial](https://github.com/mark-church/docker-pets/blob/master/DEMO-DDC.md) will show you how to deploy and demo DDC with the pets app.
 
-Production apps have entirely different requirements when it comes to security, deployment, and also security. Fortunately, deployment on Swarm & UCP is very much the same from development to production. Some minor additions to our compose file add in capabilities for secrets and also for L7 load balancing.
-
-This is the full architecture that is deployed when using [pets-prod-compose.yml](https://github.com/mark-church/docker-pets/blob/master/pets-prod-compose.yml).
+This is the full architecture that is deployed when using [pets-prod-compose.yml](https://github.com/2vcps/docker-pets-giphy/blob/master/pets-prod-compose.yml).
 
 ```
 $ echo "mysecret" | docker secret create admin_password_v1 -
