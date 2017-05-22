@@ -6,22 +6,24 @@ services:
         image: jowings/docker-pets-giphy:latest
         deploy:
             mode: replicated
-            replicas: 2
+            replicas: 4
         healthcheck:
             interval: 10s
             timeout: 5s
             retries: 3
         ports:
-            - 5000:5000
+            #- 5000:5000
             - 7000:7000
         environment:
             DB: 'db'
             THREADED: 'True'
             DEBUG: 'True'
+            SERVICE_PORTS: '80'
+            VIRTUAL_HOST: 'pets.dev.2vcps.local'
         networks:
             - backend
-        volumes:
-            - ./web:/app
+        #volumes:
+            #- ./web:/app
 
     db:
         image: consul:0.7.2

@@ -7,12 +7,9 @@ services:
         deploy:
             mode: replicated
             replicas: 2
-            labels:
-                com.docker.ucp.mesh.http.5000: "external_route=http://pets.2vcps.io,internal_port=5000"
-                com.docker.ucp.mesh.http.7000: "external_route=http://adm.2vcps.io,internal_port=7000,sticky_sessions=paas_admin_id"
         ports:
-            - 5000
-            - 7000
+         #   - 80
+            - 7001:7000
         healthcheck:
             interval: 10s
             timeout: 2s
@@ -23,10 +20,11 @@ services:
             DEBUG: 'False'
             THREADED: 'True'
             ADMIN_PASSWORD_FILE: '/run/secrets/admin_password_v1'
-
+            SERVICE_PORTS: '80'
+            VIRTUAL_HOST: 'pets.2vcps.io'
         networks:
             - backend
-            - ucp-hrm
+            - lb-proxy
         secrets:
             - admin_password_v1
 
@@ -45,21 +43,24 @@ services:
 
     viz:
         image: manomarks/visualizer
-        ports:
-            - 8080
+        #ports:
+         #   - 8080:8080
         deploy:
             placement:
                 constraints: [node.role == manager]
             labels:
                 com.docker.ucp.mesh.http.8080: "external_route=http://<viz.url>,internal_port=8080"
+        environment:
+            SERVICE_PORTS: '8080'
+            VIRTUAL_HOST: 'hello.2vcps.io'
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
-            - ucp-hrm
+            - lb-proxy
 
 networks:
     backend:
-    ucp-hrm:
+    lb-proxy:
         external: true
 
 secrets:
