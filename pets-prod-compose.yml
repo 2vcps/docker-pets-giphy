@@ -3,13 +3,13 @@ services:
     web:
         #Use following image to download from Docker Hub
         #Image with giphypop
-        image: jowings/docker-pets-giphy:latest
+        image: jowings/docker-pets-giphy:newer
         deploy:
             mode: replicated
             replicas: 2
         ports:
-            - 80:80
-            - 7001:7000
+            - 5000:5000
+            - 7000:7000
         healthcheck:
             interval: 10s
             timeout: 2s
@@ -22,7 +22,7 @@ services:
             ADMIN_PASSWORD_FILE: '/run/secrets/admin_password_v1'
         networks:
             - backend
-            - lb-proxy
+            - frontend
         secrets:
             - admin_password_v1
 
@@ -40,7 +40,7 @@ services:
             - backend
 
     viz:
-        image: manomarks/visualizer
+        image: dockersamples/visualizer:latest
         ports:
             - 8080:8080
         deploy:
@@ -51,12 +51,11 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
-            - lb-proxy
+            - frontend
 
 networks:
     backend:
-    lb-proxy:
-        external: true
+    frontend:
 
 secrets:
     admin_password_v1:
