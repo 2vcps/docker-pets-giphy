@@ -3,10 +3,10 @@ services:
     web:
         #Use following image to download from Docker Hub
         #Image with giphypop
-        image: jowings/docker-pets-giphy:newer
+        image: jowings/docker-pets-giphy:newest
         deploy:
             mode: replicated
-            replicas: 2
+            replicas: 6
         ports:
             - 5000:5000
             - 7000:7000
